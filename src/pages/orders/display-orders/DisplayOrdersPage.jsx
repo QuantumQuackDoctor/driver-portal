@@ -1,7 +1,7 @@
 
 import {useEffect, useState} from "react";
 import {getOrders} from "../../../services/OrderService";
-import {getRestaurant} from "../../../services/RestaurantService";
+import ZonedDateTime from "zoned-date-time";
 import "./DisplayOrdersPage.css";
 import {Button, Col, Container, Row} from "react-bootstrap";
 
@@ -140,6 +140,16 @@ const DisplayOrdersPage = () => {
         }
     }
 
+    const formatTime = (time) => {
+        if (time == null) {
+            return null;
+        }
+        let parts = time.slice(0, -1).split('T');
+        let dateComponent = parts[0];
+        let timeComponent = parts[1];
+        return timeComponent.toString().substring(0, 5);
+    }
+
     console.log(orders);
 
     const orderList = driverOrderInfo.map((order) =>
@@ -148,8 +158,8 @@ const DisplayOrdersPage = () => {
                 <Col>{order.id}</Col>
                 <Col>{order.restaurantName}</Col>
                 <Col>{order.address}</Col>
-                <Col>{order.orderTime.restaurantComplete}</Col>
-                <Col>{order.orderTime.deliverySlot}</Col>
+                <Col>{formatTime(order.orderTime.restaurantComplete)}</Col>
+                <Col>{formatTime(order.orderTime.deliverySlot)}</Col>
                 <Col>{order.price.tip}</Col>
                 <Col><Button>Accept</Button></Col>
             </Row>
