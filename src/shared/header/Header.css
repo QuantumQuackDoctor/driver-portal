@@ -58,7 +58,7 @@
     display: none;
 }
 .Header-link {
-    color: var(--color-light);
+    color: black;
     text-decoration: none;
     padding: 0.5em;
     width: 100%;
@@ -67,7 +67,7 @@
 .Header-link-open {
     border-radius: 10px;
     background-color: var(--color-light);
-    color: var(--bg-main);
+    color: black;
 }
 
 .Header-margin-left {

@@ -36,3 +36,15 @@
     transform: rotate(360deg);
   }
 }
+
+
+:root {
+  --bg-main: white;
+  --bg-main-desaturated: #2aa4d2;
+  --border-dark: #707070;
+  --border-light: #e9e8e8;
+  --color-accent: #f79e02;
+  --color-main: #6cdaee;
+  --color-decoration: #ffbbef;
+  --color-dark: #65828d;
+}
