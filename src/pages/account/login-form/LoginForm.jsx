@@ -38,6 +38,7 @@ const LoginForm = () => {
         }
     }
 
+
     const handleLogin = async () => {
         if (checkInputs()) {
             let authRequest = {
