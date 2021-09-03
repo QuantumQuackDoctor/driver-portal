@@ -1,12 +1,41 @@
-
+import {useHistory, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {getOrders} from "../../../services/OrderService";
+import {assignOrder, getOrders} from "../../../services/OrderService";
 import ZonedDateTime from "zoned-date-time";
 import "./DisplayOrdersPage.css";
 import {Button, Col, Container, Row} from "react-bootstrap";
+import {useAuth} from "../../../services/context-provider/ServiceProvider";
+import {getCurrentDriver} from "../../../services/DriverService";
 
 
-const DisplayOrdersPage = () => {
+const DisplayOrdersPage = ({ authenticated }) => {
+    const history = useHistory();
+
+    const [currentDriver, setCurrentDriver] = useState({
+        id: 0,
+        email: "",
+        DOB: "",
+        firstName: "",
+        lastName: "",
+        phone: "",
+        veteranStatus: "",
+        points: 0,
+        settings: {
+            notifications: {
+                email: false,
+                text: false,
+            },
+            theme: "light",
+        },
+    });
+    useEffect(() => {
+        if (authenticated) {
+            getCurrentDriver().then((res) => {
+                setCurrentDriver(res.data);
+            });
+        }
+    }, [authenticated]);
+
     const [orders, setOrders] = useState([{
         id: 0,
         orderType: "delivery",
@@ -85,7 +114,7 @@ const DisplayOrdersPage = () => {
             return {
                 id: order.id,
                 orderType: order.orderType,
-                restaurantName: "test",
+                restaurantNames: "test",
                 address: order.address,
                 orderTime: {
                     restaurantComplete: order.orderTime.restaurantComplete,
@@ -152,16 +181,20 @@ const DisplayOrdersPage = () => {
 
     console.log(orders);
 
+    const handleAccept = async (id) => {
+        await assignOrder(parseInt(id), currentDriver.id);
+        history.push("/home");
+    }
+
     const orderList = driverOrderInfo.map((order) =>
         <Container>
             <Row className={"headerRow"}>
                 <Col>{order.id}</Col>
-                <Col>{order.restaurantName}</Col>
                 <Col>{order.address}</Col>
                 <Col>{formatTime(order.orderTime.restaurantComplete)}</Col>
                 <Col>{formatTime(order.orderTime.deliverySlot)}</Col>
                 <Col>{order.price.tip}</Col>
-                <Col><Button>Accept</Button></Col>
+                <Col><Button onClick={() => handleAccept(order.id)}>Accept</Button></Col>
             </Row>
         </Container>);
 
@@ -185,7 +218,6 @@ const DisplayOrdersPage = () => {
                 <Container className={"header"}>
                     <Row className={"rowItem"}>
                         <Col>Id</Col>
-                        <Col>Restaurant</Col>
                         <Col>Address</Col>
                         <Col>Pick-up Time</Col>
                         <Col>Drop-off Time</Col>
@@ -201,7 +233,7 @@ const DisplayOrdersPage = () => {
                     }}
                 />
                 {orderList}</div>
-            <div class="d-flex justify-content-center p-3">
+            <div className="d-flex justify-content-center p-3">
                 <button className="btn btn-secondary" onClick={prevPage}>Prev</button>
                 <span className="d-flex align-items-center px-2">{page}</span>
                 <button className="btn btn-secondary" onClick={nextPage}>Next</button>
