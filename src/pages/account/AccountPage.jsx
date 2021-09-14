@@ -1,12 +1,26 @@
 import Header from "../../shared/header/Header";
-import {Route} from "react-router-dom";
 import LoginForm from "./login-form/LoginForm";
+import DriverPage from "./driver-page/DriverPage";
+import {useEffect, useState} from "react";
+import {useAuth} from "../../services/context-provider/ServiceProvider";
 
-const
-    AccountPage = () => {
-    return <Header>
-        <Route path="/account" component={LoginForm} />
-    </Header>;
+const AccountPage = () => {
+    const [authenticated, setAuthenticated] = useState(false);
+    const authService = useAuth();
+    useEffect(() => {
+        let unsubscribe = authService.subscribe((authStatus) => {
+            setAuthenticated(authStatus);
+        });
+        return () => {
+            unsubscribe();
+        };
+    }, [authService, authenticated, setAuthenticated]);
+    return (
+        <Header>
+            <LoginForm />
+            <DriverPage authenticated={authenticated} />
+        </Header>
+    );
 };
 
 export default AccountPage;
