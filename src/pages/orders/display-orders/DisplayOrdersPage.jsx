@@ -1,10 +1,8 @@
-import {useHistory, useParams} from "react-router-dom";
+import {useHistory} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {assignOrder, getOrders} from "../../../services/OrderService";
-import ZonedDateTime from "zoned-date-time";
 import "./DisplayOrdersPage.css";
 import {Button, Col, Container, Row} from "react-bootstrap";
-import {useAuth} from "../../../services/context-provider/ServiceProvider";
 import {getCurrentDriver} from "../../../services/DriverService";
 
 
@@ -104,10 +102,10 @@ const DisplayOrdersPage = ({ authenticated }) => {
         }
     ]);
 
-    const [restaurants, setRestaurants] = useState({});
+    // const [restaurants, setRestaurants] = useState({});
     const [sortType, setSortType] = useState("time");
     const [page, setPage] = useState(1);
-    const [size, setSize] = useState(1);
+    const [size, setSize] = useState(10);
 
     const setDriverOrderInfoHelper = (data) => {
         let orderInfo = data.map((order) => {
@@ -174,10 +172,11 @@ const DisplayOrdersPage = ({ authenticated }) => {
             return null;
         }
         let parts = time.slice(0, -1).split('T');
-        let dateComponent = parts[0];
+        // let dateComponent = parts[0];
         let timeComponent = parts[1];
         return timeComponent.toString().substring(0, 5);
     }
+
 
     console.log(orders);
 
@@ -187,7 +186,7 @@ const DisplayOrdersPage = ({ authenticated }) => {
     }
 
     const orderList = driverOrderInfo.map((order) =>
-        <Container>
+        <Container key={order.id}>
             <Row className={"headerRow"}>
                 <Col>{order.id}</Col>
                 <Col>{order.address}</Col>
@@ -215,7 +214,7 @@ const DisplayOrdersPage = ({ authenticated }) => {
 
             </div>
             <div className={"list"}>
-                <Container className={"header"}>
+                <Container key={0} className={"header"}>
                     <Row className={"rowItem"}>
                         <Col>Id</Col>
                         <Col>Address</Col>
@@ -242,7 +241,6 @@ const DisplayOrdersPage = ({ authenticated }) => {
                     id="pageSizeSelect"
                     className="form-select form-select-sm mx-2"
                     onChange={handleSizeChange}>
-                    <option value="1">1</option>
                     <option value="10">10</option>
                     <option value="25">25</option>
                     <option value="50">50</option>
