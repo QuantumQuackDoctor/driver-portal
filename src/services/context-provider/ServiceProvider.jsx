@@ -1,18 +1,18 @@
-import { createContext, useContext } from "react";
-import AuthService from "../AuthService";
+import React, {createContext, useContext} from 'react';
+import AuthService from '../AuthService';
 
 const ServiceContext = createContext();
 
-const ServiceProvider = ({ children }) => {
-    const services = {
-        authentication: new AuthService(),
-    };
+const ServiceProvider = ({children}) => {
+  const services = {
+    authentication: new AuthService(),
+  };
 
-    return (
-        <ServiceContext.Provider value={services}>
-            {[children].flat()}
-        </ServiceContext.Provider>
-    );
+  return (
+    <ServiceContext.Provider value={services}>
+      {[children].flat()}
+    </ServiceContext.Provider>
+  );
 };
 
 /**
@@ -20,7 +20,7 @@ const ServiceProvider = ({ children }) => {
  * @returns {AuthService}
  */
 export const useAuth = () => {
-    return useContext(ServiceContext).authentication;
+  return useContext(ServiceContext).authentication;
 };
 
 export default ServiceProvider;

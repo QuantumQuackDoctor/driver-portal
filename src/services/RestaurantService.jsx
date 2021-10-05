@@ -1,9 +1,9 @@
-import axios from "axios";
+import axios from 'axios';
 
 export default class RestaurantService {
 
 }
 
 export function getRestaurant(id) {
-    return axios.get("/restaurants", {params: {id: id}});
+  return axios.get('/restaurants', {params: {id: id}});
 }

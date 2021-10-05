@@ -1,5 +1,5 @@
-import axios from "axios";
+import axios from 'axios';
 
 export const getCurrentDriver = () => {
-    return axios.get("/accounts/driver");
+  return axios.get('/accounts/driver');
 };
