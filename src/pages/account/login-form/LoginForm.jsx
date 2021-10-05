@@ -2,7 +2,6 @@ import {Button, Form, FormGroup} from 'react-bootstrap';
 import {useAuth} from '../../../services/context-provider/ServiceProvider';
 import React, {useEffect, useState} from 'react';
 
-
 const LoginForm = () => {
   const [authenticated, setAuthenticated] = useState(false);
   const authService = useAuth();

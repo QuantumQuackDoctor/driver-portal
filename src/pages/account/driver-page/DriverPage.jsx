@@ -31,7 +31,6 @@ const DriverPage = ({authenticated}) => {
     }
   }, [authenticated]);
 
-
   return (
     <script type = "text/babel">
       {authenticated ? (
