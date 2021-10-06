@@ -3,22 +3,19 @@ Description: "creating cloudfront distribution for the driver portal"
 Parameters:
   RouteName:
     Type: String
-  BaseStackName:
-    Type: String
 Resources:
   CloudfrontDistribution:
     Type: AWS::CloudFront::Distribution
     Properties:
       DistributionConfig:
         Origins:
-          - DomainName:
-              Fn::ImportValue: !Sub "${BaseStackName}-DriverPortalDomainName"
+          - DomainName: "[[resolve:secretsmanager:DriverPortalDomainName}}"
             Id: "S3-driver-portal"
             S3OriginConfig:
               OriginAccessIdentity: !Join
                 - ""
                 - - "origin-access-identity/cloudfront/"
-                  - Fn::ImportValue: !Sub "${BaseStackName}-S3AccessIdentity"
+                  - "{{resolve:secretsmanager:S3AccessIdentity}}"
         IPV6Enabled: false
         DefaultCacheBehavior:
           AllowedMethods:
@@ -41,8 +38,7 @@ Resources:
         Enabled: true
         HttpVersion: http2
         ViewerCertificate:
-          AcmCertificateArn:
-            Fn::ImportValue: !Sub "${BaseStackName}-CertificateARN"
+          AcmCertificateArn: "{{resolve:secretsmanager:CertificateARN}}"
           MinimumProtocolVersion: TLSv1.2_2018
           SslSupportMethod: "sni-only"
       Tags:
@@ -53,8 +49,7 @@ Resources:
     Properties:
       Name: !Ref RouteName
       Comment: "points to driver-portal cloudfront distribution"
-      HostedZoneId:
-        Fn::ImportValue: !Sub "${BaseStackName}-HostedZoneId"
+      HostedZoneId: "{{resolve:secretsmanager:HostedZoneId}}"
       Type: CNAME
       TTL: 900
       ResourceRecords:
