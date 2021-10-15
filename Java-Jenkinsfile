@@ -43,7 +43,7 @@ pipeline {
         }
         stage('Create Distribution'){
             steps {
-                sh "aws cloudformation deploy --stack-name DriverPortalStack --region ${AWS_REGION} --template-file driverPortal.template --parameter-overrides RouteName=${params.RouteName} Environment=${params.Environment} BaseStackName=${params.BaseStackName} --capabilities CAPABILITY_NAMED_IAM"
+                sh "aws cloudformation deploy --stack-name DriverPortalStack --region ${AWS_REGION} --template-file driverPortal.template --parameter-overrides RouteName=${params.RouteName} Environment=${params.Environment} BaseStackName=${params.BaseStackName} --capabilities CAPABILITY_NAMED_IAM --no-fail-on-empty-changeset"
             }
         }
     }
