@@ -46,6 +46,7 @@ const OrderPage = () => {
             </Row>
             <Row className='d-flex justify-content-center p-5'>
               <Button
+                data-testid='checkout'
                 onClick={() => {
                   lcheckOut();
                 }}
@@ -57,6 +58,7 @@ const OrderPage = () => {
         ) : (
           <Row className='d-flex justify-content-center p-5'>
             <Button
+              data-testid='checkIn'
               onClick={() => {
                 lcheckIn();
               }}
