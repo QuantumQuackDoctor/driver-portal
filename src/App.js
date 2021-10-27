@@ -5,6 +5,7 @@ import HomePage from './pages/home/HomePage';
 import AccountPage from './pages/account/AccountPage';
 import OrderPage from './pages/orders/OrderPage';
 import ServiceProvider from './services/context-provider/ServiceProvider';
+import AuthenticatedRoute from './shared/protected-route/AuthenticatedRoute';
 
 function App() {
   return (
@@ -12,8 +13,10 @@ function App() {
       <ServiceProvider>
         <Switch>
           <Route exact path={['/', '/home']} component={HomePage} />
-          <Route path="/account" component={AccountPage} />
-          <Route path="/orders" component={OrderPage} />
+          <Route path='/account' component={AccountPage} />
+          <AuthenticatedRoute path='/orders' redirect='/account'>
+            <OrderPage />
+          </AuthenticatedRoute>
         </Switch>
       </ServiceProvider>
     </BrowserRouter>

@@ -1,10 +1,10 @@
 import {useHistory} from 'react-router-dom';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {assignOrder, getOrders} from '../../../services/OrderService';
 import './DisplayOrdersPage.css';
 import {Button, Col, Container, Row} from 'react-bootstrap';
 import {getCurrentDriver} from '../../../services/DriverService';
-
+import {useInterval} from '../../../hooks/Interval';
 
 const DisplayOrdersPage = ({authenticated}) => {
   const history = useHistory();
@@ -34,54 +34,56 @@ const DisplayOrdersPage = ({authenticated}) => {
     }
   }, [authenticated]);
 
-  const [orders, setOrders] = useState([{
-    id: 0,
-    orderType: 'delivery',
-    driverId: null,
-    restaurantId: null,
-    driverNote: null,
-    address: null,
-    orderTime: {
-      orderPlaced: null,
-      restaurantAccept: null,
-      restaurantStart: null,
-      restaurantComplete: null,
-      driverAccept: null,
-      delivered: null,
-      deliverySlot: null,
+  const [orders, setOrders] = useState([
+    {
+      id: 0,
+      orderType: 'delivery',
+      driverId: null,
+      restaurantId: null,
+      driverNote: null,
+      address: null,
+      orderTime: {
+        orderPlaced: null,
+        restaurantAccept: null,
+        restaurantStart: null,
+        restaurantComplete: null,
+        driverAccept: null,
+        delivered: null,
+        deliverySlot: null,
+      },
+      refunded: null,
+      price: {
+        food: 0.0,
+        delivery: 0.0,
+        tip: 0.0,
+      },
+      food: null,
     },
-    refunded: null,
-    price: {
-      food: 0.0,
-      delivery: 0.0,
-      tip: 0.0,
+    {
+      id: 1,
+      orderType: 'delivery',
+      driverId: null,
+      restaurantId: null,
+      driverNote: null,
+      address: null,
+      orderTime: {
+        orderPlaced: null,
+        restaurantAccept: null,
+        restaurantStart: null,
+        restaurantComplete: null,
+        driverAccept: null,
+        delivered: null,
+        deliverySlot: null,
+      },
+      refunded: null,
+      price: {
+        food: 0.0,
+        delivery: 0.0,
+        tip: 0.0,
+      },
+      food: null,
     },
-    food: null,
-  },
-  {
-    id: 1,
-    orderType: 'delivery',
-    driverId: null,
-    restaurantId: null,
-    driverNote: null,
-    address: null,
-    orderTime: {
-      orderPlaced: null,
-      restaurantAccept: null,
-      restaurantStart: null,
-      restaurantComplete: null,
-      driverAccept: null,
-      delivered: null,
-      deliverySlot: null,
-    },
-    refunded: null,
-    price: {
-      food: 0.0,
-      delivery: 0.0,
-      tip: 0.0,
-    },
-    food: null,
-  }]);
+  ]);
 
   const [driverOrderInfo, setDriverOrderInfo] = useState([
     {
@@ -130,21 +132,21 @@ const DisplayOrdersPage = ({authenticated}) => {
     setDriverOrderInfo(orderInfo);
   };
 
-  useEffect(() => {
+  const getOrdersCallback = useCallback(() => {
     async function fetchData() {
       try {
         const request = await getOrders(sortType, page, size);
-        console.log(request);
         setOrders(request.data);
         setDriverOrderInfoHelper(request.data);
         return request;
       } catch (err) {
         // history.push("/orders");
-
       }
     }
     fetchData();
   }, [sortType, page, size]);
+
+  useInterval(getOrdersCallback, 2000);
 
   const handleSortChange = (event) => {
     setSortType(event.target.value);
@@ -176,7 +178,6 @@ const DisplayOrdersPage = ({authenticated}) => {
     return timeComponent.toString().substring(0, 5);
   };
 
-
   console.log(orders);
 
   const handleAccept = async (id) => {
@@ -184,7 +185,7 @@ const DisplayOrdersPage = ({authenticated}) => {
     history.push('/home');
   };
 
-  const orderList = driverOrderInfo.map((order) =>
+  const orderList = driverOrderInfo.map((order) => (
     <Container key={order.id}>
       <Row className={'headerRow'}>
         <Col>{order.id}</Col>
@@ -192,27 +193,29 @@ const DisplayOrdersPage = ({authenticated}) => {
         <Col>{formatTime(order.orderTime.restaurantComplete)}</Col>
         <Col>{formatTime(order.orderTime.deliverySlot)}</Col>
         <Col>{order.price.tip}</Col>
-        <Col><Button onClick={() => handleAccept(order.id)}>Accept
-        </Button></Col>
+        <Col>
+          <Button onClick={() => handleAccept(order.id)}>Accept</Button>
+        </Col>
       </Row>
-    </Container>);
-
+    </Container>
+  ));
 
   return (
     <div className={'container'}>
       <div className={'spanDiv'}>
         <select
-          name="sortSelect"
-          id="sortSelect"
-          className="form-select form-select-sm"
-          onChange={handleSortChange}>
-          <option value="time">Time</option>
-          <option value="distance">Distance</option>
-          <option value="price">Tip Price</option>
+          name='sortSelect'
+          id='sortSelect'
+          className='form-select form-select-sm'
+          onChange={handleSortChange}
+        >
+          <option value='time'>Time</option>
+          <option value='distance'>Distance</option>
+          <option value='price'>Tip Price</option>
         </select>
         <span className={'d-flex align-items-center px-1 fs-5 float-end'}>
-          Sort:</span>
-
+          Sort:
+        </span>
       </div>
       <div className={'list'}>
         <Container key={0} className={'header'}>
@@ -232,19 +235,25 @@ const DisplayOrdersPage = ({authenticated}) => {
             height: 2,
           }}
         />
-        {orderList}</div>
-      <div className="d-flex justify-content-center p-3">
-        <button className="btn btn-secondary" onClick={prevPage}>Prev</button>
-        <span className="d-flex align-items-center px-2">{page}</span>
-        <button className="btn btn-secondary" onClick={nextPage}>Next</button>
+        {orderList}
+      </div>
+      <div className='d-flex justify-content-center p-3'>
+        <button className='btn btn-secondary' onClick={prevPage}>
+          Prev
+        </button>
+        <span className='d-flex align-items-center px-2'>{page}</span>
+        <button className='btn btn-secondary' onClick={nextPage}>
+          Next
+        </button>
         <select
-          name="pageSize"
-          id="pageSizeSelect"
-          className="form-select form-select-sm mx-2"
-          onChange={handleSizeChange}>
-          <option value="10">10</option>
-          <option value="25">25</option>
-          <option value="50">50</option>
+          name='pageSize'
+          id='pageSizeSelect'
+          className='form-select form-select-sm mx-2'
+          onChange={handleSizeChange}
+        >
+          <option value='10'>10</option>
+          <option value='25'>25</option>
+          <option value='50'>50</option>
         </select>
       </div>
     </div>

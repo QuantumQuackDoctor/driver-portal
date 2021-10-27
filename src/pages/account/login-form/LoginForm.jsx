@@ -35,7 +35,6 @@ const LoginForm = () => {
     }
   };
 
-
   const handleLogin = async () => {
     if (checkInputs()) {
       const authRequest = {
@@ -57,7 +56,11 @@ const LoginForm = () => {
     }
   };
 
-  return <script type = "text/babel">{authenticated ? '' : (
+  return (
+    <>
+      {authenticated ? (
+        ''
+      ) : (
         <div style={{width: 250, padding: 10}}>
           <Form>
             <FormGroup>
@@ -66,21 +69,28 @@ const LoginForm = () => {
             <div style={{color: 'red'}}>{errorMessage}</div>
             <FormGroup>
               <Form.Label>Email address</Form.Label>
-              <Form.Control onChange={(e) => setEmail(e.target.value)}
-                type="email" placeholder="Enter email" />
+              <Form.Control
+                onChange={(e) => setEmail(e.target.value)}
+                type='email'
+                placeholder='Enter email'
+              />
             </FormGroup>
             <FormGroup>
               <Form.Label>Password</Form.Label>
-              <Form.Control onChange={(e) => setPassword(e.target.value)}
-                type="password" placeholder="Password" />
+              <Form.Control
+                onChange={(e) => setPassword(e.target.value)}
+                type='password'
+                placeholder='Password'
+              />
             </FormGroup>
             <div style={{paddingTop: 10}}>
               <Button onClick={() => handleLogin()}>Login</Button>
             </div>
           </Form>
         </div>
-    )}</script>;
+      )}
+    </>
+  );
 };
-
 
 export default LoginForm;
