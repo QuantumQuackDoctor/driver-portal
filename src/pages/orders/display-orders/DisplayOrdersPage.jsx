@@ -59,30 +59,6 @@ const DisplayOrdersPage = ({authenticated}) => {
       },
       food: null,
     },
-    {
-      id: 1,
-      orderType: 'delivery',
-      driverId: null,
-      restaurantId: null,
-      driverNote: null,
-      address: null,
-      orderTime: {
-        orderPlaced: null,
-        restaurantAccept: null,
-        restaurantStart: null,
-        restaurantComplete: null,
-        driverAccept: null,
-        delivered: null,
-        deliverySlot: null,
-      },
-      refunded: null,
-      price: {
-        food: 0.0,
-        delivery: 0.0,
-        tip: 0.0,
-      },
-      food: null,
-    },
   ]);
 
   const [driverOrderInfo, setDriverOrderInfo] = useState([

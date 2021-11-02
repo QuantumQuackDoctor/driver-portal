@@ -12,10 +12,12 @@ function App() {
     <BrowserRouter>
       <ServiceProvider>
         <Switch>
-          <Route exact path={['/', '/home']} component={HomePage} />
           <Route path='/account' component={AccountPage} />
           <AuthenticatedRoute path='/orders' redirect='/account'>
             <OrderPage />
+          </AuthenticatedRoute>
+          <AuthenticatedRoute path={['/', '/home']} redirect='/account'>
+            <HomePage />
           </AuthenticatedRoute>
         </Switch>
       </ServiceProvider>
