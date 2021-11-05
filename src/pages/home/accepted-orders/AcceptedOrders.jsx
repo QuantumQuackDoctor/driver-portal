@@ -1,7 +1,11 @@
 import React, {useEffect} from 'react';
 import {useState} from 'react';
 import {Button, Col, Container, Modal, Row} from 'react-bootstrap';
-import {getAcceptedOrders, pickUpOrder} from '../../../services/OrderService';
+import {
+  deliverOrder,
+  getAcceptedOrders,
+  pickUpOrder,
+} from '../../../services/OrderService';
 
 const AcceptedOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -55,21 +59,31 @@ const AcceptedOrders = () => {
       updateOrders();
       closeOrderModal();
     } catch (err) {
-      switch (err.status) {
-        case 404:
-          setModalErrorMessage('Order does not exist');
-          break;
-        case 410:
-          setModalErrorMessage('Order was not accepted');
-          break;
-        default:
-          setModalErrorMessage('Server error');
-      }
+      displayError(err);
     }
   };
 
-  const updateOrderDeliver = (id) => {
-    console.log(id);
+  const updateOrderDeliver = async (id) => {
+    try {
+      await deliverOrder(id);
+      updateOrders();
+      closeOrderModal();
+    } catch (err) {
+      displayError(err);
+    }
+  };
+
+  const displayError = (err) => {
+    switch (err.status) {
+      case 404:
+        setModalErrorMessage('Order does not exist');
+        break;
+      case 410:
+        setModalErrorMessage('Order was not accepted');
+        break;
+      default:
+        setModalErrorMessage('Server error');
+    }
   };
 
   return (

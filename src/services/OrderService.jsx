@@ -25,3 +25,7 @@ export function getAcceptedOrders() {
 export function pickUpOrder(id) {
   return axios.post('/order/driver/update', {orderId: id, action: 'retrieved'});
 }
+
+export function deliverOrder(id) {
+  return axios.post('/order/driver/update', {orderId: id, action: 'delivered'});
+}
