@@ -17,11 +17,13 @@ const AccountPage = () => {
   }, [authService, authenticated, setAuthenticated]);
   return (
     <Header>
-      <LoginForm />
-      <DriverPage authenticated={authenticated} />
+      {authenticated ? (
+        <DriverPage authenticated={authenticated} />
+      ) : (
+        <LoginForm />
+      )}
     </Header>
   );
 };
 
 export default AccountPage;
-
