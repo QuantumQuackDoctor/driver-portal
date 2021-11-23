@@ -1,6 +1,9 @@
+/* eslint-disable comma-dangle */
+/* eslint-disable indent */
 import {Button, Form, FormGroup} from 'react-bootstrap';
 import {useAuth} from '../../../services/context-provider/ServiceProvider';
 import React, {useEffect, useState} from 'react';
+import {validatePassword} from '../../../services/validators/PasswordValidator';
 
 const LoginForm = () => {
   const [authenticated, setAuthenticated] = useState(false);
@@ -23,10 +26,12 @@ const LoginForm = () => {
 
   const checkInputs = () => {
     if (/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(email)) {
-      if (password.length >= 8) {
+      if (validatePassword(password)) {
         return true;
       } else {
-        setErrorMessage('Password too short');
+        setErrorMessage(
+          'Password must have 1 Uppercase, Number, and Special character'
+        );
         return false;
       }
     } else {
