@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import axios from 'axios';
 
 const TOKEN = 'token';
@@ -45,7 +46,6 @@ export default class AuthService {
     this.sendEvent(this.isAuthenticated);
   }
 
-
   /**
    * You need to unsubscribe from this!
    * Don't throw errors in the callback
@@ -67,15 +67,16 @@ export default class AuthService {
     });
 
     this.responseInterceptor = axios.interceptors.response.use(
-        (response) => {
-          return Promise.resolve(response);
-        },
-        (error) => {
-          if (error.response.status === 401) {
-            if (this.isAuthenticated) this.logout();
-          }
-          return Promise.reject(error);
-        },
+      (response) => {
+        return Promise.resolve(response);
+      },
+      (error) => {
+        if (error.response.status === 401) {
+          if (this.isAuthenticated) this.logout();
+        }
+        return Promise.reject(error);
+        // eslint-disable-next-line comma-dangle
+      },
     );
   }
 
@@ -87,4 +88,15 @@ export default class AuthService {
   testAuthentication() {
     return axios.get('/accounts/authenticated');
   }
+}
+
+export function requestResetPassword(email) {
+  return axios.get(`/accounts/reset-password/driver/${email}`);
+}
+
+export function updatePassword(token, password) {
+  return axios.post('/accounts/reset-password', {
+    newPassword: password,
+    token,
+  });
 }
